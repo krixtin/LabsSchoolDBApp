@@ -56,10 +56,12 @@ namespace LabsSchoolDBApp
                 switch (userChoice)
                 {
                     case "1":
+                        Console.Clear();
                         ShowStudentsMenu();
                         break;
                     case "2":
-                        AddStudent();
+                        Console.Clear();
+                        Helper.AddStudent();
                         break;
                     case "3":
                         return;
@@ -89,10 +91,12 @@ namespace LabsSchoolDBApp
                 switch (userChoice)
                 {
                     case "1":
+                        Console.Clear();
                         ShowStaffMenu();
                         break;
                     case "2":
-                        AddStaff();
+                        Console.Clear();
+                        Helper.AddStaff();
                         break;
                     case "3":
                         return;
@@ -110,36 +114,69 @@ namespace LabsSchoolDBApp
 
         public static void ShowStudentsMenu()
         {
-            Console.Clear();
-            Console.WriteLine("Visa elever - Funktionalitet ej implementerad än.");
-            Console.WriteLine("Tryck på valfri tangent för att fortsätta.");
-            Console.ReadKey();
+            while (true)
+            {
+                Console.WriteLine("1. Visa alla elever");
+                Console.WriteLine("2. Visa klasser");
+                Console.WriteLine("3. Gå tillbaka");
+                Console.WriteLine();
+                string? userChoice = Console.ReadLine();
+
+                switch (userChoice)
+                {
+                    case "1":
+                        Console.Clear();
+                        Helper.SortStudents();
+                        break;
+                    case "2":
+                        Console.Clear();
+                        Helper.ShowClasses();
+                        break;
+                    case "3":
+                        return;
+                    default:
+                        Console.Clear();
+                        Console.WriteLine("\n\n\t\tOgiltigt val. Tryck på valfri tangent för att fortsätta.");
+                        Console.ReadKey();
+                        break;
+                }
+
+                Console.Clear();
+            }
         }
 
-        public static void AddStudent()
-        {
-            Console.Clear();
-            Console.WriteLine("Lägg till elev - Funktionalitet ej implementerad än.");
-            Console.WriteLine("Tryck på valfri tangent för att fortsätta.");
-            Console.ReadKey();
-        }
 
         public static void ShowStaffMenu()
         {
-            Console.Clear();
-            Console.WriteLine("Visa personal - Funktionalitet ej implementerad än.");
-            Console.WriteLine("Tryck på valfri tangent för att fortsätta.");
-            Console.ReadKey();
+            while (true)
+            {
+                Console.WriteLine("1. Visa all personal");
+                Console.WriteLine("2. Visa avdelningar");
+                Console.WriteLine("3. Gå tillbaka");
+                Console.WriteLine();
+                string? userChoice = Console.ReadLine();
+                switch (userChoice)
+                {
+                    case "1":
+                        Console.Clear();
+                        Helper.SortStaff();
+                        break;
+                    case "2":
+                        Console.Clear();
+                        Helper.ShowDepartments();
+                        break;
+                    case "3":
+                        return;
+                    default:
+                        Console.Clear();
+                        Console.WriteLine("\n\n\t\tOgiltigt val. Tryck på valfri tangent för att fortsätta.");
+                        Console.ReadKey();
+                        break;
+                }
+                Console.Clear();
+            }
         }
 
-        public static void AddStaff()
-        {
-            Console.Clear();
-            Console.WriteLine("Lägg till personal - Funktionalitet ej implementerad än.");
-            Console.WriteLine("Tryck på valfri tangent för att fortsätta.");
-            Console.ReadKey();
-
-        }
 
     }
 }
