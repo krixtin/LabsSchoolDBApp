@@ -126,7 +126,7 @@ namespace LabsSchoolDBApp
                 {
                     case "1":
                         Console.Clear();
-                        Helper.SortStudents();
+                        Helper.ShowStudents();
                         break;
                     case "2":
                         Console.Clear();
@@ -159,7 +159,7 @@ namespace LabsSchoolDBApp
                 {
                     case "1":
                         Console.Clear();
-                        Helper.SortStaff();
+                        Helper.ShowStaff();
                         break;
                     case "2":
                         Console.Clear();
