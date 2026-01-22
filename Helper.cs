@@ -2,6 +2,7 @@
 using LabsSchoolDBApp.Models;
 using System;
 using System.Collections.Generic;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 
 namespace LabsSchoolDBApp
@@ -20,8 +21,29 @@ namespace LabsSchoolDBApp
             newStudent.LastName = Console.ReadLine();
             Console.Write("Ange personnummer (ÅÅMMDDXXXX): ");
             newStudent.PersonalNr = Console.ReadLine();
+            if (newStudent.PersonalNr.Length != 10)
+            {
+                Console.WriteLine();
+                Console.WriteLine("Fel. Personnumret måste anges i formatet ÅÅMMDDXXXX.");
+                Console.ReadKey();
+                return;
+            }
             Console.Write("Ange klass: ");
             newStudent.ClassCode = Console.ReadLine();
+            if (newStudent.ClassCode.Length != 4)
+            {
+                Console.WriteLine();
+                Console.WriteLine("Fel. Klasskoden måste ha exakt fyra (4) tecken.");
+                Console.ReadKey();
+                return;
+            }
+            if (!context.Classes.Any(c => c.ClassCode == newStudent.ClassCode))
+            {
+                Console.WriteLine();
+                Console.WriteLine("Fel. Det finns ingen klass med det namnet.");
+                Console.ReadKey();
+                return;
+            }
 
             if (context.Students.Any(s => s.PersonalNr == newStudent.PersonalNr))
             {
@@ -50,8 +72,6 @@ namespace LabsSchoolDBApp
                 Console.ReadKey();
                 return;
             }
-
-
         }
 
         public static void ShowClasses()
@@ -74,7 +94,7 @@ namespace LabsSchoolDBApp
             else
             {
                 Console.WriteLine();
-                Console.WriteLine("Klassen finns inte.");
+                Console.WriteLine("Det finns ingen klass med det namnet.");
             }
 
             Console.ReadKey();
@@ -87,29 +107,60 @@ namespace LabsSchoolDBApp
             Console.WriteLine("Välj sortering:");
             Console.WriteLine("1. Förnamn");
             Console.WriteLine("2. Efternamn");
-            string? sortChoice = Console.ReadLine();
-            if (sortChoice != null)
+            string? sortName = Console.ReadLine();
+            Console.WriteLine("1. Stigande");
+            Console.WriteLine("2. Fallande");
+            string? sortDesc = Console.ReadLine();
+            Console.Clear();
+            if (sortName != null)
             {
                 using var context = new LabsSchoolDBContext();
                 List<Student> students;
-                switch (sortChoice)
+                switch (sortName)
                 {
                     case "1":
-                        students = context.Students
-                            .OrderBy(s => s.FirstName)
-                            .ToList();
-                        foreach (var s in students)
+                        if (sortDesc == "1")
                         {
-                            Console.WriteLine($"{s.FirstName} {s.LastName} - {s.PersonalNr} - {s.ClassCode}");
+                            students = context.Students
+                                .OrderBy(s => s.FirstName)
+                                .ToList();
+                            foreach (var s in students)
+                            {
+                                Console.WriteLine($"Namn: {s.FirstName} {s.LastName} - Personnummer: {s.PersonalNr} - Klass: {s.ClassCode}");
+                            }   
+                        }
+                        else if (sortDesc == "2")
+                        {
+                            students = context.Students
+                                .OrderByDescending(s => s.FirstName)
+                                .ToList();
+
+                            foreach (var s in students)
+                            {
+                                Console.WriteLine($"Namn: {s.FirstName} {s.LastName} - Personnummer: {s.PersonalNr} - Klass: {s.ClassCode}");
+                            }
                         }
                         break;
                     case "2":
-                        students = context.Students
-                            .OrderBy(s => s.LastName)
-                            .ToList();
-                        foreach (var s in students)
+                        if (sortDesc == "1")
                         {
-                            Console.WriteLine($"{s.LastName}, {s.FirstName} - {s.PersonalNr} - {s.ClassCode}");
+                            students = context.Students
+                                .OrderBy(s => s.LastName)
+                                .ToList();
+                            foreach (var s in students)
+                            {
+                                Console.WriteLine($"Namn: {s.LastName}, {s.FirstName} - Personnummer: {s.PersonalNr} - Klass: {s.ClassCode}");
+                            }
+                        }
+                        else if (sortDesc == "2")
+                        {
+                            students = context.Students
+                            .OrderByDescending(s => s.LastName)
+                            .ToList();
+                            foreach (var s in students)
+                            {
+                                Console.WriteLine($"Namn: {s.LastName}, {s.FirstName} - Personnummer: {s.PersonalNr} - Klass: {s.ClassCode}");
+                            }
                         }
                         break;
                     default:
@@ -130,31 +181,67 @@ namespace LabsSchoolDBApp
             Console.WriteLine("Välj sortering:");
             Console.WriteLine("1. Förnamn");
             Console.WriteLine("2. Efternamn");
-            string? sortChoice = Console.ReadLine();
-            if (sortChoice != null)
+            string? sortName = Console.ReadLine();
+            Console.WriteLine("1. Stigande");
+            Console.WriteLine("2. Fallande");
+            string? sortDesc = Console.ReadLine();
+            Console.Clear();
+            if (sortName != null)
             {
                 using var context = new LabsSchoolDBContext();
                 List<Student> students;
-                switch (sortChoice)
+                switch (sortName)
                 {
                     case "1":
-                        students = context.Students
-                            .Where(s => s.ClassCode == classToView)
-                            .OrderBy(s => s.FirstName)
-                            .ToList();
-                        foreach (var s in students)
+                        if (sortDesc == "1")
                         {
-                            Console.WriteLine($"{s.FirstName} {s.LastName} - {s.PersonalNr} - {s.ClassCode}");
+                            students = context.Students
+                                .Where(students => students.ClassCode== classToView)
+                                .OrderBy(s => s.FirstName)
+                                .ToList();
+                            Console.WriteLine($"Klass: {classToView}");
+                            foreach (var s in students)
+                            {
+                                Console.WriteLine($"Namn: {s.FirstName} {s.LastName} - Personnummer: {s.PersonalNr} - Klass: {s.ClassCode}");
+                            }
+                        }
+                        else if (sortDesc == "2")
+                        {
+                            students = context.Students
+                                .Where(students => students.ClassCode == classToView)
+                                .OrderByDescending(s => s.FirstName)
+                                .ToList();
+                            Console.WriteLine($"Klass: {classToView}");
+                            foreach (var s in students)
+                            {
+                                Console.WriteLine($"Namn: {s.FirstName} {s.LastName} - Personnummer: {s.PersonalNr} - Klass: {s.ClassCode}");
+                            }
                         }
                         break;
                     case "2":
-                        students = context.Students
-                            .Where(s => s.ClassCode == classToView)
-                            .OrderBy(s => s.LastName)
-                            .ToList();
-                        foreach (var s in students)
+                        if (sortDesc == "1")
                         {
-                            Console.WriteLine($"{s.LastName}, {s.FirstName} - {s.PersonalNr} - {s.ClassCode}");
+                            students = context.Students
+                                .Where(students => students.ClassCode == classToView)
+                                .OrderBy(s => s.LastName)
+                                .ToList();
+                            Console.WriteLine($"Klass: {classToView}");
+                            foreach (var s in students)
+                            {
+                                Console.WriteLine($"Namn: {s.LastName}, {s.FirstName} - Personnummer: {s.PersonalNr} - Klass: {s.ClassCode}");
+                            }
+                        }
+                        else if (sortDesc == "2")
+                        {
+                            students = context.Students
+                            .Where(students => students.ClassCode == classToView)
+                            .OrderByDescending(s => s.LastName)
+                            .ToList();
+                            Console.WriteLine($"Klass: {classToView}");
+                            foreach (var s in students)
+                            {
+                                Console.WriteLine($"Namn: {s.LastName}, {s.FirstName} - Personnummer: {s.PersonalNr} - Klass: {s.ClassCode}");
+                            }
                         }
                         break;
                     default:
@@ -163,7 +250,6 @@ namespace LabsSchoolDBApp
                         Console.ReadKey();
                         return;
                 }
-
                 Console.WriteLine();
                 Console.WriteLine("Tryck på valfri tangent för att gå tillbaka.");
                 Console.ReadKey();
