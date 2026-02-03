@@ -171,6 +171,7 @@ namespace LabsSchoolDBApp
                 }
 
                 Console.WriteLine();
+                ShowStudent();
                 Console.WriteLine("Tryck på valfri tangent för att gå tillbaka.");
                 Console.ReadKey();
             }
@@ -251,6 +252,7 @@ namespace LabsSchoolDBApp
                         return;
                 }
                 Console.WriteLine();
+                ShowStudent();
                 Console.WriteLine("Tryck på valfri tangent för att gå tillbaka.");
                 Console.ReadKey();
             }
@@ -344,7 +346,7 @@ namespace LabsSchoolDBApp
             Console.WriteLine("Avdelningar:");
             foreach (var d in departments)
             {
-                Console.WriteLine(d.DepartmentName);
+                Console.WriteLine($"{d.DepartmentName} - Antal anställda: {context.Employees.Count(e => e.DepartmentId == d.DepartmentId)}");
             }
             Console.WriteLine("\nVilken avdelning vill du visa? ");
             var deptToView = Console.ReadLine();
@@ -393,9 +395,43 @@ namespace LabsSchoolDBApp
                 Console.WriteLine($"Namn: {e.FirstName} {e.LastName} - Avdelning: {e.Department.DepartmentName} - Anställningsdatum: {e.EmploymentDate} - Lön: {e.Salary} SEK");
             }
 
-                            Console.WriteLine();
-                Console.WriteLine("Tryck på valfri tangent för att gå tillbaka.");
+            Console.WriteLine();
+            Console.WriteLine("Tryck på valfri tangent för att gå tillbaka.");
+            Console.ReadKey();
+        }
+
+        public static void ShowCourses()
+        {
+            using var context = new LabsSchoolDBContext();
+            var courses = context.Courses.ToList();
+            Console.WriteLine("Kurser:");
+            foreach (var c in courses)
+            {
+                Console.WriteLine($"{c.CourseName}");
+            }
+            Console.WriteLine();
+            Console.WriteLine("Tryck på valfri tangent för att gå tillbaka.");
+            Console.ReadKey();
+
+        }
+
+        public static void ShowStudent()
+        {
+            using var context = new LabsSchoolDBContext();
+            Console.WriteLine("\nVilken elev vill du visa? ");
+            var student = Console.ReadLine();
+            if (context.Students.Any(s => (s.FirstName + ' ' + s.LastName) == student))
+            {
+                Menu.StudentMenu(student);
+                return;
+            }
+            else
+            {
+                Console.WriteLine();
+                Console.WriteLine("Det finns ingen elev med det namnet.");
                 Console.ReadKey();
+                return;
+            }
         }
 
 

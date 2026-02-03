@@ -1,4 +1,7 @@
-﻿using System;
+﻿using LabsSchoolDBApp.Data;
+using LabsSchoolDBApp.Models;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -11,10 +14,12 @@ namespace LabsSchoolDBApp
 
             while (true)
             {
-                
+
                 Console.WriteLine("1. Hantera elever");
                 Console.WriteLine("2. Hantera personal");
-                Console.WriteLine("3. Avsluta");
+                Console.WriteLine("3. Visa kurser");
+                Console.WriteLine("4. Visa avdelningar");
+                Console.WriteLine("5. Avsluta");
                 Console.WriteLine();
                 string? userChoice = Console.ReadLine();
 
@@ -29,6 +34,14 @@ namespace LabsSchoolDBApp
                         StaffMainMenu();
                         break;
                     case "3":
+                        Console.Clear();
+                        Helper.ShowCourses();
+                        break;
+                    case "4":
+                        Console.Clear();
+                        Helper.ShowDepartments();
+                        break;
+                    case "5":
                         return;
                     default:
                         Console.Clear();
@@ -178,5 +191,12 @@ namespace LabsSchoolDBApp
         }
 
 
+
+        public static void StudentMenu(string? student)
+        {
+            Console.WriteLine("Studentmeny under utveckling...");
+            Console.ReadKey();
+            return;
+        }
     }
 }
