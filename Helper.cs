@@ -419,9 +419,12 @@ namespace LabsSchoolDBApp
         {
             using var context = new LabsSchoolDBContext();
             Console.WriteLine("\nVilken elev vill du visa? ");
-            var student = Console.ReadLine();
-            if (context.Students.Any(s => (s.FirstName + ' ' + s.LastName) == student))
+            var studentName = Console.ReadLine();
+            if (context.Students.Any(s => (s.FirstName + ' ' + s.LastName) == studentName))
             {
+                var student = context.Students
+                    .FirstOrDefault(s => (s.FirstName + ' ' + s.LastName) == studentName)!
+                    .PersonalNr;
                 Menu.StudentMenu(student);
                 return;
             }
@@ -434,6 +437,19 @@ namespace LabsSchoolDBApp
             }
         }
 
+        internal static void ShowStudentCourses(string student)
+        {
+            throw new NotImplementedException();
+        }
 
+        internal static void ShowStudentGrades(string student)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static void GradeStudent(string student)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

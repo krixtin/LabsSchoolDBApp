@@ -192,11 +192,49 @@ namespace LabsSchoolDBApp
 
 
 
-        public static void StudentMenu(string? student)
+        public static void StudentMenu(string student)
         {
-            Console.WriteLine("Studentmeny under utveckling...");
-            Console.ReadKey();
-            return;
+            using var context = new LabsSchoolDBContext();
+            var studentObject = context.Students.Where(s => s.PersonalNr == student).SingleOrDefault();
+             
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine($"Elev: {studentObject!.FirstName} {studentObject!.LastName}");
+                Console.WriteLine("1. Visa kurser");
+                Console.WriteLine("2. Visa betyg");
+                Console.WriteLine("3. Sätt betyg");
+                Console.WriteLine("4. Gå tillbaka");
+                Console.WriteLine();
+                string? userChoice = Console.ReadLine();
+                switch (userChoice)
+                {
+                    case "1":
+                        Console.Clear();
+                        Helper.ShowStudentCourses(student);
+                        break;
+                    case "2":
+                        Console.Clear();
+                        Helper.ShowStudentGrades(student);
+                        break;
+                    case "3":
+                        Console.Clear();
+                        Helper.GradeStudent(student);
+                        return;
+                    case "4":
+                        return;
+                    default:
+                        Console.Clear();
+                        Console.WriteLine("\n\n\t\tOgiltigt val. Tryck på valfri tangent för att fortsätta.");
+                        Console.ReadKey();
+                        break;
+                }
+            
+                Console.Clear();
+            
+            }
+
         }
+        
     }
 }
