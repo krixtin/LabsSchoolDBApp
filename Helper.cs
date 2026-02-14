@@ -259,7 +259,6 @@ namespace LabsSchoolDBApp
         }
 
 
-
         public static void AddStaff()
         {
             using var context = new LabsSchoolDBContext();
@@ -439,17 +438,77 @@ namespace LabsSchoolDBApp
 
         internal static void ShowStudentCourses(string student)
         {
-            throw new NotImplementedException();
-        }
+            using var context = new LabsSchoolDBContext();
+            var studentObject = context.Students.Where(s => s.PersonalNr == student).SingleOrDefault();
 
-        internal static void ShowStudentGrades(string student)
-        {
-            throw new NotImplementedException();
+            var studentCoursesWithGrades =
+                from cc in context.ClassCourses
+                join c in context.Courses
+                    on cc.CourseCode equals c.CourseCode
+                join g in context.Grades
+                    .Where(g => g.StudentId == studentObject.StudentId)
+                    on cc.CourseCode equals g.CourseCode
+                    into gradeGroup
+                from g in gradeGroup.DefaultIfEmpty()
+                where cc.ClassCode == studentObject.ClassCode
+                select new
+                {
+                    CourseName = c.CourseName,
+                    Grade = g != null ? g.Grade1 : null
+                };
+
+            Console.WriteLine($"Kurser och betyg för {studentObject.FirstName} {studentObject.LastName}:");
+            foreach (var course in studentCoursesWithGrades.ToList())
+            {
+                Console.WriteLine($"{course.CourseName} - Betyg: {course.Grade}");
+            }
+            Console.ReadKey();
         }
 
         internal static void GradeStudent(string student)
         {
-            throw new NotImplementedException();
+            ShowStudentCourses(student);
+            using var context = new LabsSchoolDBContext();
+            var studentToGrade = context.Students.Where(s => s.PersonalNr == student).SingleOrDefault();
+
+            using var transaction = context.Database.BeginTransaction();
+            try
+            {
+                var newGrade = new Grade();
+                Console.WriteLine("Vilken kurs vill du sätta betyg i? ");
+                var courseName = Console.ReadLine();
+                if (!context.Courses.Any(c => c.CourseName == courseName))
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("Fel. Det finns ingen kurs med det namnet.");
+                    Console.ReadKey();
+                    return;
+                }
+                newGrade.CourseCode = context.Courses.Where(c => c.CourseName == courseName).SingleOrDefault().CourseCode;
+                Console.WriteLine("Vad är ditt namn? ");
+                var teacherName = Console.ReadLine();
+                if (!context.Employees.Any(e => (e.FirstName + ' ' + e.LastName) == teacherName))
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("Fel. Det finns ingen lärare med det namnet.");
+                    Console.ReadKey();
+                    return;
+                }
+                newGrade.TeacherId = context.Employees.Where(e => (e.FirstName + ' ' + e.LastName) == teacherName).SingleOrDefault().EmployeeId;
+                newGrade.StudentId = studentToGrade.StudentId;
+                newGrade.Date = DateOnly.FromDateTime(DateTime.Now);
+                Console.WriteLine($"Vilket betyg (0-5) vill du sätta på {studentToGrade.FirstName} {studentToGrade.LastName} i kursen {courseName}? ");
+                newGrade.Grade1 = int.Parse(Console.ReadLine());
+                context.Grades.Add(newGrade);
+                context.SaveChanges();
+                transaction.Commit();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Det gick inte att sätta betyg.");
+                transaction.Rollback();
+            }
+
         }
     }
 }
