@@ -202,9 +202,8 @@ namespace LabsSchoolDBApp
                 Console.Clear();
                 Console.WriteLine($"Elev: {studentObject!.FirstName} {studentObject!.LastName}");
                 Console.WriteLine("1. Visa kurser");
-                Console.WriteLine("2. Visa betyg");
-                Console.WriteLine("3. Sätt betyg");
-                Console.WriteLine("4. Gå tillbaka");
+                Console.WriteLine("2. Sätt betyg");
+                Console.WriteLine("3. Gå tillbaka");
                 Console.WriteLine();
                 string? userChoice = Console.ReadLine();
                 switch (userChoice)
@@ -215,13 +214,9 @@ namespace LabsSchoolDBApp
                         break;
                     case "2":
                         Console.Clear();
-                        Helper.ShowStudentGrades(student);
-                        break;
-                    case "3":
-                        Console.Clear();
                         Helper.GradeStudent(student);
                         return;
-                    case "4":
+                    case "3":
                         return;
                     default:
                         Console.Clear();
